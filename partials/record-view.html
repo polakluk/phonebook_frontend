@@ -1,0 +1,42 @@
+
+<div class="row">
+  <div class="col-sm-offset-2 col-sm-8">
+
+    <div class="alert alert-{{msg.type}}" ng-repeat="msg in viewController.msgs">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      {{msg.text}}
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Record #{{viewController.record.id}}</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-4">
+            Name: 
+          </div>
+          <div class="col-sm-8">
+            <strong>{{viewController.record.name}}</strong>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            Phone Number: 
+          </div>
+          <div class="col-sm-8">
+            <strong>{{viewController.record.phone | phonenumSk }}</strong>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-3">
+            <a ui-sref="listRecords" class="btn btn-danger">Back to list</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

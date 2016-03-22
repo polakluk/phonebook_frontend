@@ -1,0 +1,39 @@
+  <div class="row">
+    <div class="col-sm-offset-4 col-sm-6">
+      <div class="text-center">
+        <h2>Phone Records</h2>
+        <div class="alert alert-{{msg.type}}" ng-repeat="msg in listController.msgs">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          {{msg.text}}
+        </div>
+
+        <hot-table col-headers="true" row-headers="true" datarows="listController.records" settings="listController.TableSettings">
+          <hot-column data="id" title="'ID'" read-only></hot-column>
+          <hot-column data="name" title="'Name'"></hot-column>
+          <hot-column data="phone" title="'Phone Number'"></hot-column>
+        </hot-table>
+      </div>
+    </div>
+  </div>
+  
+  <hr />
+  <div class="row">
+    <div class="col-sm-offset-4 col-sm-6">
+      <div class="text-center">
+        <button class="btn btn-default" ng-click="listController.paginate(-1)"><i class="glyphicon glyphicon-menu-left"> </i> </button>
+        Page {{listController.pagination.page}}
+        <button class="btn btn-default" ng-click="listController.paginate(1)"><i class="glyphicon glyphicon-menu-right"> </i></button>
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <div class="pull-right">
+        <select ng-model="listController.pagination.limit" class="form-control" ng-change="listController.changeLimit()">
+          <option value="0">-- All --</option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+        </select>
+      </div>
+    </div>
+  </div>

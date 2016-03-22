@@ -1,0 +1,25 @@
+<div class="form-group">
+  <label for="name" class="col-sm-4 control-label">Name</label>
+  <div class="col-sm-8">
+    <input type="text" required ng-model="newController.record.name" class="form-control" id="name" name="name" placeholder="Name of the record"/>
+    <div ng-messages="recordForm.name.$error" class="errors">
+      <div ng-message="required">Name is required</div>
+    </div>
+  </div>
+</div>
+<div class="form-group">
+  <label for="phone" class="col-sm-4 control-label">Phone Number</label>
+  <div class="col-sm-8">
+    <input type="text" phonenumberdigits ng-model="newController.record.phone" class="form-control" id="phone" name="phone" maxlength="9" placeholder="Phone Number in format 'xxxxxxxxx' (9 digits)" />
+
+    <div ng-messages="recordForm.phone.$error" class="errors">
+      <div ng-message="phonenumber">Phone number requires 9 digits</div>
+    </div>
+  </div>
+</div>
+<div class="form-group">
+  <div class="col-sm-offset-4 col-sm-8">
+    <button type="submit" class="btn btn-primary" ng-disabled="recordForm.$invaslid">Save</button>
+    <a ui-sref="listRecords({addedRecord : 1})" class="btn btn-danger">Back to list</a>
+  </div>
+</div>
