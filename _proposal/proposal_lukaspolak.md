@@ -4,6 +4,7 @@
 ## Project Information
 * Title **EGA Data Submission database (mEGAdata)**
 * URL: https://bitbucket.org/mugqic/gsoc2016/overview#markdown-header-ega-data-submission-database-megadata
+* LInk to proposal in Markdown: https://github.com/polakluk/phonebook_frontend/blob/master/_proposal/proposal_lukaspolak.md
 
 ## Information about mentor
 * Name: **David Bujold**
@@ -49,7 +50,7 @@ Currently, school and work duties take up a lot of my time, but I do try to stay
 ## Proposal
 
 ### Synopsis
-This project describes necessary steps to finishing the program that helps scientists to submit their research data to  European Genome-phenome database.At the beginning, the proposal describes concrete step required to refactor the current code to support SQLite database. Then, it describe steps necessary to finish the application including implementation of autocomplete functionality using ontology. For each step, it lists potential problems and how to deal with them. In order to make the program easy to install for everybody, using Vagrant is suggested. The proposal explains what the Vagrant script will do. Then, for user authentication, an implementation of feasible solution based on Google OAuth2 is explained with fall-back solution for localhost-only installations. Lastly, the proposal imposes strict policy to update documentation on weekly basis to ensure its correctness.
+This project describes necessary steps to finishing the program that helps scientists to submit their research data to  European Genome-phenome database. At the beginning, the proposal describes concrete step required to refactor the current code to support SQLite database. Then, it describe steps necessary to finish the application including implementation of autocomplete functionality using ontology services, global search, simple user management and generating script. For each step, it lists potential problems and how to deal with them. In order to make the program easy to install for everybody, using Vagrant is suggested. The proposal explains what the Vagrant script will do. Then, for user authentication, an implementation of feasible solution based on Google OAuth2 is explained with fall-back solution for localhost-only installations. Lastly, the proposal imposes strict policy to update documentation on weekly basis to ensure its correctness.
 
 ### Benefits for the community
 
@@ -58,10 +59,23 @@ The benefits of this project to the community of scientists are numerous. The go
 ### My motivation
 As I am in my last year of my studies, I plan on spending my last summer working on something interesting and beneficial for community around me before I start a full-time job. For past several years, I have been developing PHP web applications, so I am looking for a fresh new experience. That is, where this project comes into play. The project combines technologies which I was eager to try.
 
-Prior to submitting code for selection test, I had to learn AngularJS and Python Flask framework. By doing so, I wanted to demonstrate the dedication I am willing to give to the project that interests me and poses the type of challenge for me that I am looking for. My expectations from this project are that I improve my skills in AngularJS and Python Flask.Furthermore, I look forward to familiarizing myself with Vagrant. Cooperation with a mentor from overseas is not an issue for me since I have been working for New York-based company for quite some time and, thus, got used to the usual communication problems presented by different timezones.
+Prior to submitting code for selection test, I had to learn AngularJS and Python Flask framework. By doing so, I wanted to demonstrate the dedication I am willing to give to the project that interests me and poses the type of challenge for me that I am looking for. My expectations from this project are that I improve my skills in AngularJS and Python Flask. Furthermore, I look forward to familiarizing myself with Vagrant. Cooperation with a mentor from overseas is not an issue for me since I have been working for New York-based company for quite some time and, thus, got used to the usual communication problems presented by different timezones.
 
 ### Description of work
-This project is based off of source code provided by David Bujold. Currently, the project is using MySQL database to store data. During this project, both frontend and backend application will be refactored and extended by several new features like autocomplete on ontology fields, management of metadata and more. The output of frontend application will be a list of generated XML files with a python file that can be run to upload these XML files to the database. In order to make sure that documentation will be completed at the end of the project, the documentation will be updated according to what was finished over the week at the end of each week. Format of the documentation can be, either a PDF file uploaded to the repository, or a list of Markdown-ed files. This decision should be made in cooperation with mentor before week 1.
+This project is based off of source code provided by David Bujold. Currently, the project is using MySQL database to store data. During this project, both frontend and backend application will be refactored and extended by several new features like autocomplete on ontology fields, management of metadata and more explained in sections below. The output of frontend application will be a list of generated XML files with a python file that can be run to upload these XML files to the database automatically. In order to make sure that documentation will be completed at the end of the project, the documentation will be updated according to what was finished over the week at the end of each week.
+
+##### Documentation format
+Format of the documentation can be, either a PDF file uploaded to the repository, or a list of Markdown-ed files. This decision should be made in cooperation with mentor before week 1. The documentation should include cover following topics:
+
+* Installation of the applications (both backend and frontend) manually
+* Installation of the applications using provided Vagrantfile (including instructions on how to set up Vagrant on Windowd and UNIX-based operating systems)
+* Instructrinos on how to user Vagrantfile to deploy the application to selected UNIX server operating systems (i.e. CentOS)
+* Instructinos on how to run the application
+* Instructions on how to run the generated script to submit data to the server database 
+* User documentation covering how to control every element in user interface
+* Example of CSV file for batch import of dataset files
+* Instructions how to set up key for Google OAuth2 authentication
+* Instructions how to set up the fallback authentication solution (if implemented)
 
 ##### Week 1
 The work should start by refactoring both backend and frontend code. In backend, code for REST API should take advantage of python module *flask-restful*. Each resource should have its own Resource class in directory *resources* in order to keep them consistent. This will help to increase code readability and to give us a better handle over format of response. Also, each response from REST API should carry information, if an error has occurred during processing the request along with an optional information from REST API. Having this information in response object makes it easier to handle the errors in frontend. In order to make REST API consistent, every insert and remove operation in REST API should return ID of manipulated object in *payload* so frontend can react to this fact. Thus, the proposed format of response is this object:
@@ -118,21 +132,21 @@ The abovementioned structures enable managing collections of metadata from a cen
 
 In case a proprietary type of property is requiered (for example picking a value from a fixed set of values), *typeAffiliation* field of *Metadata property* is set to "proprietary". Then, field *additionalAttributes* is used to specify type of the proprietary property. In code, this attributed is added to HTML of input field as attribute and later picked up by AngularJS. An AngularJS decorator with the same name should be created and handle logic of the proprietary input field.
 
-When adding a new collection of metadata values, user is propted to select their affiliation (Donor, Samples or others) and then showed HTML form with all propertied asigned to this affiliation from table *Metadata properties*. During rendering HTML form, the code should add any *additionalAttributes* to inputs, in order to link them with additional AngularJS decorators (for example to restrict age range for certain fields).
+When adding a new collection of metadata values, user is prompted to select their affiliation (Donor, Samples or others) and then showed HTML form with all properties asigned to this affiliation from table *Metadata properties*. During rendering HTML form, the code should add any *additionalAttributes* to inputs, in order to link them with additional AngularJS decorators (for example to restrict age range for certain fields).
 
 ##### Week 3
 
-Every study contains numerous files with datasets. The application requiers a user interface that is capable of importing their location along with their MD5 hashes. User will be able to insert, modify or remove any specific file with dataset from within the interface.
+Every study contains numerous files with datasets. The application requires a user interface that is capable of importing their location along with their MD5 hashes. User will be able to insert, modify or remove any specific file with dataset from within the interface.
 
 Moreover, import batch functionality should be created. User should be able to upload a file in CSV format to add multiple files into database. This import feature will perform operations insert, update and delete based on type of row. Therefore, if any record has changed (data in dataset has change) or was removed from the study, this change can be reflected in one coherent CSV file.
 
-The format (Columns) of import CSV is following:
+The format (columns) of import CSV is following:
 
 ```
 {
-  Filename : "optional filename of the file; if left blank, *Location* value is used",
-  Location : "location of the file",
-  MD5 : "current MD5 hash for this file",
+  filename : "optional filename of the file; if left blank, *location* value is used",
+  location : "location of the file",
+  md5 : "current MD5 hash for this file",
   type : "type of dataset",
   operation : "operation that should be performed on this row"
 }
@@ -160,7 +174,34 @@ This week will be reserved to catching up on any pending issues with the code wr
 
 At the moment, donor samples are added purely by editting Handson Table in Samples part of application. Every time a sample is added, its metadata have to be added again. However, a more coherent way to add or update them is favorable, so an HTML form that allows them to enter all values at once should be added to the application. User should be able to select *Metadata collection* relevant for the sample and then enter values. Similarly, HTML for for adding and updating Donors should be created to make this process more coherent for users. 
 
-Then, scripts generating XML are currently written in PerlL. However, a python script would be a more favorable for them based on my communication with David Bojuld. The added benefit of having them written in python is being able to run them from within backend application easily. In order to convert them, I will have to understand the format for each XML document and write separate script for it. The estimation is that each type of file will take me aroun half of a day to understand and finish the script for it. 
+Then, scripts generating XML are currently written in Perl. However, a python script would be a more favorable for them based on my communication with David Bojuld. The added benefit of having them written in python is being able to run them from within backend application easily. In order to convert them, I will have to understand the format for each XML document and write separate script for it. The estimation is that each type of XML file will take around half of a day to understand and finish the script for it. 
+
+Lastly, the generator of executable python script should be created. The output of this generator should be a text representation of python file that can be run. During its run, it generates appropriate XML files, prepares them and then submitts them to the EGA server. The generator should be a class with methods which return python code in text form. Here is an example of how it should look like;
+
+```python
+class Generator:
+   
+   def IncludeModules(self):
+      var res = "import module1;\n"
+      res += "import module2;\n"
+      
+      return res
+      
+    def GenerateDonorXml(self, donorId):
+      var res = "generator = GeneratorDonor();\n"
+      res += "generator.generateXml(__DIR__);\n"
+      
+      return res
+      
+
+# here is usage of the code
+var generator = Generator()
+var pythonFile = ""
+pythonFile += generator.ImportModules()
+pythonFile += generator.GenerateDonorXml(5)
+```
+
+If decided it is more beneficial to work on the stretch goal straight away and let executing the script via REST API request to backend, then this step can be skipped and a native python code can be written for execution from backend.
 
 ##### Week 7
 
@@ -168,7 +209,7 @@ One module of frontend application should allow users to search for a specific t
 
 ##### Week 7-8
 
-The next step should be making sure that anybody can easily setup and run the application. For this job, I picked *Vagrant*, thanks to its platform independence. The program combines two the most important features - it is platform independent and it is easi to set up even for non-technocal person.  As I never worked with Vagrant, I expect to run into several difficulties with it along the process of learning it. However, I have friends in community of people who use Vagrant extensively and frequently write scripts, so writing the script file will not pose a huge problem. The created script should be able to set up an environment in which:
+The next step should be making sure that anybody can easily setup and run the application. For this job, I picked *Vagrant*, thanks to its platform independence. The program combines two the most important features - it is platform independent and it is easy to set up even for non-technocal person.  As I never worked with Vagrant, I expect to run into several difficulties with it along the process of learning it. However, I have friends in community of people who use Vagrant extensively and frequently write scripts who are willing to help me in case I get stuck. Thus, writing the script file will not pose a huge problem. The created script should be able to set up an environment in which:
 
 * python with all required dependencies is installed
 * backend REST API service is running
@@ -179,13 +220,48 @@ Therefore, the user should be able to run the application by running command "va
 
 ##### Week 8-9
 
-Autocomplete function integrated with ontology server provides an easier way for users to enter data without error. Another column should be added to table *metadata_properties* called "ontology_name". If *typeProperty* is **ontology** input field for the metadata property should enable autocomplete function communicating with na ontology service. The ontology service will be picked based on communication with mentor before coding starts.
+Autocomplete function integrated with ontology server provides an easier way for users to enter data without error. Another column should be added to table *metadata_properties* called "*ontology_name*". If *typeProperty* is **ontology** input field for the metadata property should enable autocomplete function communicating with ontology service. The ontology service will be picked based on communication with mentor before coding starts in week 1. So far, mentor David mentioned only *UBERON ontology* service. My limited knowledge of this domain prevents me from making an educated conclusion and picking the service on my own.
 
-The autocomplete feature will be implemented as an AngularJS decorator that will be added to the input field. This decorator will communicate with AngularJS service that will handle communication with service's REST API.
+The autocomplete feature will be implemented as an AngularJS decorator that will be added to the input field. This decorator will communicate with AngularJS service that will handle communication with service's REST API. In case a combination of several ontology services are used in application, yet another column named "*ontology_service*" should be added to table *metadata_properties*. Multiple ontology serices would require a separate AngularJD decorator for each ontology service and a separate AngularJS service to communicate with the REST API, in order to keep the code clean and readable. Then, the input's AngularJS decorator will be selected based on name of the ontology service. 
+
+Working with multiple ontology services require more time from me to familiar myself with their documentation so this option could be considered a **stretch goal** in case there is time left and need to implement it.
 
 ##### Week 10
 
-*OAuth2* does not work with *localhost*, therefore a different approach has to be selected. In config file, user can select which authentication method they want to use, based on their environment. If the application will run on server, *OAuth2* will be recommended.
+User management system in the frontend application should keep track of people, who can work with the study and their credentials for submission database. These information should be stored in *Users* table with following structure:
+
+```
+Users {
+  id : "Unique user identificator",
+  username : "user's username that depends on selected authentication method",
+  name : "Displayed name in User Interface",
+  password : "if *OAuth2* is used, then this field is empty; otherwise it contains hash of user's password",
+  submissionCredentials : "encrypted JSON object containing username and password to the submission server",
+  dateCreated : "date when the account was created",
+  dateLastLogin : "date when the account was used the last time",
+  token : "identification of logged in user"
+}
+```
+
+When user logs in using *Google OAuth2* service, it creates a record for him in *Users* table in following fashion:
+* Field **username** will be set to user email
+* Field **name** will be set to user name in Google Account
+* Field **password** is left empty
+* Field **submissionCredentials** contains encrypted JSON object with no credentials
+
+The object with credentials have following properties:
+```
+{
+  username : "Username on the server",
+  password : "Password for the user"
+}
+```
+
+There is numerous examples of implementation of *Google OAuth2* authentication in AngularJS on Github, so their code can be used as inspiration for writing the support for this serice to the application.
+
+If this application wants to be able to run in local environment, then it requires a fallback solution that works in this environment. *OAuth2* has troubles working on *localhost* because it requires open port for communication in firewall which can be harder to set up. The fallback solution is using local accounts created in local registration.The authentication mode can be set in configuration file of the application (by default, *Google OAuth2* will be selected). As this solution requires some work and its priority is not high, it can be considered another **stretch goal** after everything essential is finished.
+
+The user management system in this application does not require any advanced features, so a simple listing of users with date of their last login is sufficient. User should be able to update only their own information in order to avoid any issues with modifying others personal data. To achieve this, a random token should be generated in backend after logging in and stored in both frontend cookies and in user record in table *Users*. Then, each time a REST request working with user data to backend is send, this *token* should be send with it and validated in backend. 
 
 ##### Submission script from within the application
 
@@ -226,7 +302,7 @@ The outcome of this project should be following (including estimated week of del
   * Delivery: **week 4 (midterm evaluation June 17th)**
 
 
-* Donor sample editor + refactoring XML generation scripts.
+* Donor sample editor, refactoring XML generation scripts and creating generator for python executable script for submission of data.
   * Delivery: **week 5-6 (July 1th)**
 
 
@@ -252,6 +328,14 @@ The outcome of this project should be following (including estimated week of del
 
 * Allowing multiple studies in one application
   *  Delivery: **stretch goal**
+
+
+* Extend autocomplete functionality to work with multiple ontology services
+  * Delivery: **stretch goal**
+
+
+* Implement user management for local environments
+  * Delivery: **stretch goal**
 
 This proposal leaves 2 weeks as a time reserve in case specific tasks take longer than expected or any other unexpected event occurs. In case the project will be finished before August 23rd, I will focus on working on extra features which are mentioned in timeline above as stretch goals.
 
